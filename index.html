@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Game Kuis IPAS Kelas 6 HOTS</title>
+
+<style>
+body{
+    font-family:Arial, sans-serif;
+    background:linear-gradient(to bottom,#e3f2fd,#ffffff);
+    margin:0;
+}
+.container{
+    max-width:900px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    box-shadow:0 0 15px rgba(0,0,0,0.2);
+    border-radius:12px;
+}
+h1{text-align:center;color:#0d47a1}
+.question{font-size:22px;margin-bottom:15px}
+.option{
+    padding:12px;
+    margin:8px 0;
+    font-size:18px;
+    border:2px solid #ccc;
+    border-radius:8px;
+    cursor:pointer;
+}
+.option:hover{background:#f1f1f1}
+.correct{background:#c8e6c9;border-color:green}
+.wrong{background:#ffcdd2;border-color:red}
+button{
+    padding:12px 20px;
+    font-size:18px;
+    background:#1565c0;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+button:hover{background:#0d47a1}
+#result{text-align:center;font-size:22px;margin-top:20px}
+.explanation{
+    background:#f9f9f9;
+    padding:15px;
+    margin-top:10px;
+    border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>Haikal Learning Centre Game Kuis IPAS Kelas 6 (HOTS)</h1>
+
+<div id="quiz"></div>
+<button onclick="nextQuestion()">Soal Berikutnya</button>
+
+<div id="result"></div>
+<div id="review"></div>
+</div>
+
+<script>
+const questions = [
+{q:"Sebuah wilayah sering mengalami banjir. Upaya paling tepat adalah …",
+o:["Membuang sampah ke sungai","Membangun rumah di bantaran sungai","Menanam pohon dan membuat drainase","Menutup sungai"],
+a:2,e:"Pohon dan drainase membantu penyerapan dan aliran air."},
+
+{q:"Energi alternatif paling ramah lingkungan adalah …",
+o:["Minyak bumi","Batu bara","Tenaga surya","Gas alam"],
+a:2,e:"Tenaga surya tidak menghasilkan polusi."},
+
+{q:"Dampak jangka panjang penebangan hutan liar adalah …",
+o:["Udara sejuk","Tanah subur","Erosi dan banjir","Hewan bertambah"],
+a:2,e:"Hutan gundul menyebabkan erosi dan banjir."},
+
+{q:"Perubahan es menjadi air disebut …",
+o:["Menguap","Membeku","Mencair","Menyublim"],
+a:2,e:"Mencair adalah perubahan padat ke cair."},
+
+{q:"Adaptasi makhluk hidup ditunjukkan oleh …",
+o:["Manusia berlari","Bebek berkaki berselaput","Air mengalir","Pohon tumbang"],
+a:1,e:"Kaki berselaput membantu bebek berenang."},
+
+{q:"Penyebab pemanasan global adalah …",
+o:["Menanam pohon","Menghemat listrik","Pembakaran sampah plastik","Bersepeda"],
+a:2,e:"Pembakaran plastik menghasilkan gas rumah kaca."},
+
+{q:"Alat pernapasan ikan adalah …",
+o:["Paru-paru","Kulit","Insang","Trakea"],
+a:2,e:"Ikan bernapas dengan insang."},
+
+{q:"Sumber energi alternatif saat listrik padam adalah …",
+o:["Angin","Plastik","Pasir","Tanah"],
+a:0,e:"Angin dapat dimanfaatkan sebagai energi listrik."},
+
+{q:"Rantai makanan yang benar adalah …",
+o:["Elang → rumput → ular","Rumput → kambing → manusia","Ular → padi → tikus","Manusia → ayam → padi"],
+a:1,e:"Herbivora memakan tumbuhan, manusia memakan herbivora."},
+
+{q:"Benda penghantar panas disebut …",
+o:["Isolator","Konduktor","Resistor","Reflektor"],
+a:1,e:"Konduktor menghantarkan panas."},
+
+{q:"Contoh hemat energi adalah …",
+o:["Lampu menyala siang hari","AC terus menyala","Mematikan listrik saat tidak dipakai","TV seharian"],
+a:2,e:"Mematikan alat listrik menghemat energi."},
+
+{q:"Jika ekosistem rusak maka …",
+o:["Tidak berpengaruh","Rantai makanan terganggu","Hewan bertambah","Lingkungan seimbang"],
+a:1,e:"Kerusakan ekosistem mengganggu keseimbangan."},
+
+{q:"Bencana akibat pergeseran lempeng bumi adalah …",
+o:["Banjir","Gempa bumi","Angin topan","Kekeringan"],
+a:1,e:"Gempa terjadi karena pergeseran lempeng."},
+
+{q:"Benda berubah bentuk karena gaya adalah …",
+o:["Batu dilempar","Karet ditarik","Air mengalir","Lampu menyala"],
+a:1,e:"Karet berubah bentuk saat ditarik."},
+
+{q:"Manfaat tumbuhan bagi manusia adalah …",
+o:["Menghasilkan asap","Menyebabkan banjir","Menghasilkan oksigen","Mengotori tanah"],
+a:2,e:"Tumbuhan menghasilkan oksigen."},
+
+{q:"Hewan pemakan tumbuhan disebut …",
+o:["Karnivora","Omnivora","Herbivora","Insektivora"],
+a:2,e:"Herbivora memakan tumbuhan."},
+
+{q:"Pembuatan garam memanfaatkan proses …",
+o:["Membeku","Menguap","Mencair","Mengendap"],
+a:1,e:"Air laut menguap, garam tertinggal."},
+
+{q:"Penyebab pencemaran udara adalah …",
+o:["Air hujan","Asap kendaraan","Angin","Tanah"],
+a:1,e:"Asap kendaraan mencemari udara."},
+
+{q:"Planet terdekat dari Matahari adalah …",
+o:["Venus","Bumi","Merkurius","Mars"],
+a:2,e:"Merkurius paling dekat dengan Matahari."},
+
+{q:"Gravitasi menyebabkan benda …",
+o:["Melayang","Jatuh ke bumi","Mengapung","Berputar"],
+a:1,e:"Gravitasi menarik benda ke pusat bumi."},
+
+/* 20 SOAL TAMBAHAN (FIX) */
+{q:"Sumber daya alam yang dapat diperbarui adalah …",
+o:["Batubara","Minyak bumi","Air","Gas alam"],
+a:2,e:"Air dapat diperbarui melalui siklus air."},
+
+{q:"Bunyi berasal dari …",
+o:["Cahaya","Getaran","Bayangan","Panas"],
+a:1,e:"Getaran menghasilkan bunyi."},
+
+{q:"Perubahan kimia ditunjukkan oleh …",
+o:["Es mencair","Air menguap","Kertas dibakar","Gula larut"],
+a:2,e:"Pembakaran menghasilkan zat baru."},
+
+{q:"Manfaat daur ulang adalah …",
+o:["Menambah sampah","Mengurangi pencemaran","Merusak lingkungan","Menyebabkan banjir"],
+a:1,e:"Daur ulang mengurangi pencemaran."},
+
+{q:"Fungsi akar tumbuhan adalah …",
+o:["Fotosintesis","Menyerap air","Bernapas","Membuat makanan"],
+a:1,e:"Akar menyerap air dan mineral."},
+
+{q:"Lapisan bumi tempat manusia hidup adalah …",
+o:["Inti","Mantel","Kerak","Magma"],
+a:2,e:"Kerak bumi adalah tempat kehidupan."},
+
+{q:"Alat ukur suhu adalah …",
+o:["Barometer","Termometer","Higrometer","Anemometer"],
+a:1,e:"Termometer mengukur suhu."},
+
+{q:"Siang dan malam terjadi karena …",
+o:["Revolusi bumi","Rotasi bumi","Gerhana","Gravitasi"],
+a:1,e:"Rotasi bumi menyebabkan siang dan malam."},
+
+{q:"Energi dalam makanan disebut …",
+o:["Panas","Kimia","Cahaya","Bunyi"],
+a:1,e:"Makanan menyimpan energi kimia."},
+
+{q:"Contoh menjaga lingkungan adalah …",
+o:["Menebang pohon","Membuang sampah","Menanam pohon","Membakar hutan"],
+a:2,e:"Menanam pohon menjaga lingkungan."}
+,{q:"Jika populasi ular menurun drastis, dampak yang paling mungkin terjadi adalah …",
+o:["Padi bertambah subur","Populasi tikus meningkat","Ekosistem seimbang","Elang punah"],
+a:1,e:"Ular adalah pemangsa tikus, jika ular berkurang maka tikus akan meningkat."}
+
+,{q:"Kegiatan berikut yang paling berpengaruh terhadap kerusakan tanah adalah …",
+o:["Menanam pohon","Reboisasi","Penambangan liar","Mengairi sawah"],
+a:2,e:"Penambangan liar merusak struktur tanah."}
+
+,{q:"Perubahan energi yang terjadi pada kipas angin adalah …",
+o:["Listrik → panas","Listrik → gerak","Gerak → listrik","Panas → gerak"],
+a:1,e:"Energi listrik diubah menjadi energi gerak."}
+
+,{q:"Jika manusia terus menggunakan bahan bakar fosil, dampak jangka panjangnya adalah …",
+o:["Lingkungan lebih bersih","Energi melimpah","Pemanasan global meningkat","Udara semakin sejuk"],
+a:2,e:"Bahan bakar fosil menghasilkan gas rumah kaca."}
+
+,{q:"Hewan yang berperan sebagai konsumen tingkat I adalah …",
+o:["Elang","Harimau","Kambing","Ular"],
+a:2,e:"Kambing memakan tumbuhan sehingga konsumen tingkat I."}
+
+,{q:"Benda yang paling baik digunakan sebagai isolator panas adalah …",
+o:["Besi","Aluminium","Plastik","Tembaga"],
+a:2,e:"Plastik tidak mudah menghantarkan panas."}
+
+,{q:"Salah satu akibat membuang limbah ke sungai adalah …",
+o:["Air semakin jernih","Ikan berkembang","Air tercemar","Ekosistem membaik"],
+a:2,e:"Limbah mencemari air dan merusak ekosistem."}
+
+,{q:"Jika daerah resapan air berkurang, maka kemungkinan yang terjadi adalah …",
+o:["Air tanah bertambah","Banjir meningkat","Sungai mengering","Tanah menjadi subur"],
+a:1,e:"Resapan berkurang menyebabkan air meluap dan banjir."}
+
+,{q:"Peristiwa perubahan air menjadi uap karena panas matahari disebut …",
+o:["Membeku","Menguap","Mengembun","Mencair"],
+a:1,e:"Menguap adalah perubahan cair menjadi gas."}
+
+,{q:"Tindakan yang paling tepat untuk menjaga keseimbangan ekosistem adalah …",
+o:["Berburu hewan","Menebang hutan","Melestarikan habitat","Membuang limbah"],
+a:2,e:"Melestarikan habitat menjaga keseimbangan ekosistem."}
+
+];
+
+let index=0,score=0,answered=false;
+
+function loadQuestion(){
+    const q=questions[index];
+    let html=`<div class='question'>${index+1}. ${q.q}</div>`;
+    q.o.forEach((opt,i)=>{
+        html+=`<div class='option' onclick='checkAnswer(this,${i})'>${opt}</div>`;
+    });
+    document.getElementById("quiz").innerHTML=html;
+}
+function checkAnswer(el,i){
+    if(answered) return;
+    answered=true;
+    const correct=questions[index].a;
+    if(i===correct){
+        el.classList.add("correct");
+        score+=2.5;
+    }else{
+        el.classList.add("wrong");
+        document.querySelectorAll(".option")[correct].classList.add("correct");
+    }
+}
+function nextQuestion(){
+    if(!answered) return alert("Pilih jawaban dulu!");
+    index++;
+    answered=false;
+    if(index<questions.length) loadQuestion();
+    else showResult();
+}
+function showResult(){
+    document.getElementById("quiz").innerHTML="";
+    document.getElementById("result").innerHTML=
+        `🎯 Skor Akhir: <b>${score}</b> dari 100`;
+    let review="<h2>Pembahasan</h2>";
+    questions.forEach((q,i)=>{
+        review+=`<div class='explanation'>
+        <b>${i+1}. ${q.q}</b><br>
+        Jawaban Benar: ${q.o[q.a]}<br>
+        Penjelasan: ${q.e}</div>`;
+    });
+    document.getElementById("review").innerHTML=review;
+}
+loadQuestion();
+</script>
+</body>
+</html>
